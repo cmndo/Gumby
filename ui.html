@@ -750,6 +750,32 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="row">
+		<style>
+		.red {
+			color: red;
+		}
+		.blue {
+			color: blue;
+		}
+		</style>
+		<h1 class="lead" gumby-inview-class="red" gumby-inview-offset-bottom="200">In-view Classes</h1>
+		<div class="row">
+			<div class="twelve columns">
+				<p  gumby-inview-class="blue" gumby-inview-offset="200">
+				Use the gumby-inview-class attribute to define the class which will be given when that element is in the viewport. That is, when the top of the element is above the bottom of the screen, and when the bottom of the element is not yet off the top.
+				</p>
+				<p  gumby-inview-class="blue" gumby-inview-offset="200">
+				Additionally, use the gumby-inview-offset attribute to specify an amount you'd like to offset the activation up or down.
+				</p>
+
+			</div>
+		</div>
+	</div>
+
+
+
 	<div class="row">
 		<h1 class="lead">Images</h1>
 		<div class="row">
@@ -1287,6 +1313,9 @@
 	<script src="js/libs/ui/gumby.retina.js"></script>
 	<script src="js/libs/ui/gumby.fixed.js"></script>
 	<script src="js/libs/ui/gumby.skiplink.js"></script>
+
+	<script src="js/libs/ui/gumby.inview.js"></script>
+	
 	<script src="js/libs/ui/gumby.toggleswitch.js"></script>
 	<script src="js/libs/ui/gumby.checkbox.js"></script>
 	<script src="js/libs/ui/gumby.radiobtn.js"></script>
