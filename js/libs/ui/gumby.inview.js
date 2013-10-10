@@ -4,15 +4,23 @@
 	'use strict';
 
 	function InViewWatcher($elem){
-		var ACTIVE_TRIGGER = $elem.attr('gumby-inview-class');
-		var ACTIVE_OFFSET_BOTTOM = $elem.attr('gumby-inview-offset-bottom') || $elem.attr('gumby-inview-offset') || 0;
-		var ACTIVE_OFFSET_TOP = $elem.attr('gumby-inview-offset-top') || $elem.attr('gumby-inview-offset') || 0;
+		
+
+		var ACTIVE_TRIGGER = Gumby.selectAttr.apply($elem, ['inview-class']);
+		var ACTIVE_TRIGGER_TOP = Gumby.selectAttr.apply($elem, ['inview-class-top']);
+		var ACTIVE_TRIGGER_BOTTOM = Gumby.selectAttr.apply($elem, ['inview-class-bottom']);
+
+		var ACTIVE_OFFSET = Gumby.selectAttr.apply($elem, ['inview-offset']);
+		var ACTIVE_OFFSET_TOP = Gumby.selectAttr.apply($elem, ['inview-offset-top']);
+		var ACTIVE_OFFSET_BOTTOM = Gumby.selectAttr.apply($elem, ['inview-offset-bottom']);
 
 		return {
 			elem: $elem,
 			classname: ACTIVE_TRIGGER,
-			offsetBottom: ACTIVE_OFFSET_BOTTOM,
-			offsetTop: ACTIVE_OFFSET_TOP
+			classnameTop: ACTIVE_TRIGGER_TOP || "",
+			classnameBottom: ACTIVE_TRIGGER_BOTTOM || "",
+			offsetTop: ACTIVE_OFFSET_TOP || ACTIVE_OFFSET || 0,
+			offsetBottom: ACTIVE_OFFSET_BOTTOM || ACTIVE_OFFSET || 0
 		}
 	}
 
@@ -25,7 +33,7 @@
 		/*
 			I want to initialize elements which have a gumby-scroll-trigger attribute
 		*/
-		$('[gumby-inview-class]').each(function() {
+		$('.inview').each(function() {
 			var $this = $(this);
 
 			// this element has already been initialized
@@ -70,13 +78,41 @@
 				offb = tmp.offsetBottom;
 
 				//if above bottom and below top, you're on the screen
-				if(ot < (t - offb) + wh && ot + oh - offt > t){
+
+				var below = ot > (t - offb) + wh;
+
+				var above = ot + oh - offt < t;
+
+
+				if(!above && !below){
 					if(!tmp.elem.hasClass(tmp.classname)){
 						tmp.elem.addClass(tmp.classname);
 					}
-				}else{
+					if(tmp.elem.hasClass(tmp.classnameTop)){
+						tmp.elem.removeClass(tmp.classnameTop);
+					}
+					if(tmp.elem.hasClass(tmp.classnameBottom)){
+						tmp.elem.removeClass(tmp.classnameBottom);
+					}
+				}else if(above && !below){
 					if(tmp.elem.hasClass(tmp.classname)){
 						tmp.elem.removeClass(tmp.classname);
+					}
+					if(!tmp.elem.hasClass(tmp.classnameTop)){
+						tmp.elem.addClass(tmp.classnameTop);
+					}
+					if(tmp.elem.hasClass(tmp.classnameBottom)){
+						tmp.elem.removeClass(tmp.classnameBottom);
+					}
+				}else if(below && !above){
+					if(tmp.elem.hasClass(tmp.classname)){
+						tmp.elem.removeClass(tmp.classname);
+					}
+					if(tmp.elem.hasClass(tmp.classnameTop)){
+						tmp.elem.removeClass(tmp.classnameTop);
+					}
+					if(!tmp.elem.hasClass(tmp.classnameBottom)){
+						tmp.elem.addClass(tmp.classnameBottom);
 					}
 				}
 			}
