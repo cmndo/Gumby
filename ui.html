@@ -303,6 +303,8 @@
 		#inviewExample.onscreen {
 			color: red;
 			left: 25%;
+			position: fixed;
+			bottom: 200px;
 		}
 		#inviewExample.offtop {
 			color: purple;
@@ -313,15 +315,34 @@
 			left: 0%;
 		}
 		#inviewExampleDescription{
-			padding-top: 100px;
+			margin-top: 100px;
 		}
+
+		#inviewExample2 {
+			overflow: hidden;
+			background: #2c2c2c;
+			color: white;
+			-webkit-transition: .5s;
+			height: 100px;
+			padding: 20px;
+		}
+		#inviewExample2.onscreen {
+			
+			height: 200px;
+		}
+
 		</style>
 		<h1 id="inviewExample" class="inview"
 			gumby-inview-class="onscreen"
 			gumby-inview-class-top="offtop"
 			gumby-inview-class-bottom="offbottom"
 			gumby-inview-offset="200">In-view Classes</h1>
-		<div class="row">
+		<div id="inviewExample2" class="row inview"
+			gumby-inview-class="onscreen"
+			gumby-inview-class-top="offtop"
+			gumby-inview-class-bottom="offbottom"
+			gumby-inview-offset="300">
+
 			<div class="twelve columns" id="inviewExampleDescription">
 				<p>
 				Use the gumby-inview-class attribute to define the class which will be given when that element is in the viewport. That is, when the top of the element is above the bottom of the screen, and when the bottom of the element is not yet off the top.
