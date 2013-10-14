@@ -295,60 +295,27 @@
 	</div>
 	<div class="row">
 		<style>
-		#inviewExample {
-			-webkit-transition: .5s;
-			position: absolute;
-			left: 0%;
-		}
-		#inviewExample.onscreen {
-			color: red;
-			left: 25%;
-			position: fixed;
-			bottom: 200px;
-		}
-		#inviewExample.offtop {
-			color: purple;
-			left: 50%;
-		}
-		#inviewExample.offbottom {
-			color: orange;
-			left: 0%;
-		}
-		#inviewExampleDescription{
-			margin-top: 100px;
-		}
-
-		#inviewExample2 {
-			overflow: hidden;
-			background: #2c2c2c;
-			color: white;
-			-webkit-transition: .5s;
-			height: 100px;
-			padding: 20px;
-		}
-		#inviewExample2.onscreen {
-			
-			height: 200px;
-		}
+		
 
 		</style>
-		<h1 id="inviewExample" class="inview"
-			gumby-inview-class="onscreen"
-			gumby-inview-class-top="offtop"
-			gumby-inview-class-bottom="offbottom"
-			gumby-inview-offset="200">In-view Classes</h1>
-		<div id="inviewExample2" class="row inview"
-			gumby-inview-class="onscreen"
-			gumby-inview-class-top="offtop"
-			gumby-inview-class-bottom="offbottom"
-			gumby-inview-offset="300">
-
+		<h1 class="toggle" gumby-trigger="">Inview Plugin</h1>
+		<div class="row">
 			<div class="twelve columns" id="inviewExampleDescription">
+				<h3>What is Inview?</h3>
 				<p>
-				Use the gumby-inview-class attribute to define the class which will be given when that element is in the viewport. That is, when the top of the element is above the bottom of the screen, and when the bottom of the element is not yet off the top.
+				The revised mission is to use the functionality of Toggles & Switches. They have a good purpose as it is, and by using their implementation, we can make Adam Happy as well as making the community have less to learn. The philosophy of the library's implementation will be focused.
+				</p>
+				<h3>What tag fires it</h3>
+				<p>
+				gumby-on="inview"
 				</p>
 				<p>
-				Additionally, use the gumby-inview-offset attribute to specify an amount you'd like to offset the activation up or down.
+				gumby-classname="inview"<br>
+				gumby-classname="inview|notinview"<br>
+				gumby-classname="inview|belowview|aboveview"
+				</p>
+				<p>
+				gumby-target="#element"
 				</p>
 
 			</div>

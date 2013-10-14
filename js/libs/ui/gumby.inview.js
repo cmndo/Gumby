@@ -5,7 +5,7 @@
 
 	function InViewWatcher($elem){
 		
-
+		
 		var ACTIVE_TRIGGER = Gumby.selectAttr.apply($elem, ['inview-class']);
 		var ACTIVE_TRIGGER_TOP = Gumby.selectAttr.apply($elem, ['inview-class-top']);
 		var ACTIVE_TRIGGER_BOTTOM = Gumby.selectAttr.apply($elem, ['inview-class-bottom']);
