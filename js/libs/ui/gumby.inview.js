@@ -30,13 +30,15 @@
 
 		var classname = Gumby.selectAttr.apply(this.$el, ['class']).split("|");
 
-		this.classname =  classname[0];
+		this.classname =  classname[0] || "active";
 		this.classnameBottom = classname[1] || "";
 		this.classnameTop = classname[2] || classname[1] || "";
 
-		this.offset = Gumby.selectAttr.apply(this.$el, ['offset']) || 0;
-		this.offsetTop = Gumby.selectAttr.apply(this.$el, ['offset-top']) || this.offset;
-		this.offsetBottom = Gumby.selectAttr.apply(this.$el, ['offset-bottom']) || this.offset;
+		var offset = Gumby.selectAttr.apply(this.$el, ['offset']).split("|");
+
+		this.offset =  offset[0] || 0;
+		this.offsetTop = offset[1] || offset[0];
+		this.offsetBottom = this.offset;
 	}
 
 	// parse data-for attribute
