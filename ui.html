@@ -295,10 +295,56 @@
 	</div>
 	<div class="row">
 		<style>
-		
+		h1.inview {
+			-webkit-transition: .5s;
+		}
+		.active {
+			color: red;
+			text-align: center;
+			background: #2c2c2c;
+		}
+		.active:before {
+			content: "✈"
+		}
+		.active:after {
+			content: "On Screen";
+		}
+
+		.deactive {
+			color: pink;
+		}
+		.deactive:before {
+			content: "+";
+		}
+		.deactive:after {
+			content: "Off Screen";
+		}
+
+
+		.offtop {
+			color: green;
+			text-align: right;
+		}
+		.offtop:before {
+			content: "☮"
+		}
+		.offtop:after {
+			content: "Off Top"
+		}
+
+		.offbottom {
+			color: orange;
+			text-align: left;
+		}
+		.offbottom:before {
+			content: "♥"
+		}
+		.offbottom:after {
+			content: "Off Bottom"
+		}
 
 		</style>
-		<h1 class="toggle" gumby-trigger="">Inview Plugin</h1>
+		<h1 class="inview" gumby-class="active|offbottom|offtop" gumby-offset="200">Inview - </h1>
 		<div class="row">
 			<div class="twelve columns" id="inviewExampleDescription">
 				<h3>What is Inview?</h3>

@@ -3,36 +3,148 @@
 
 	'use strict';
 
-	function InViewWatcher($elem){
+	function InViewWatcher($el){
 		
+		Gumby.debug('Initializing InViewWatcher', $el);
 		
-		var ACTIVE_TRIGGER = Gumby.selectAttr.apply($elem, ['inview-class']);
-		var ACTIVE_TRIGGER_TOP = Gumby.selectAttr.apply($elem, ['inview-class-top']);
-		var ACTIVE_TRIGGER_BOTTOM = Gumby.selectAttr.apply($elem, ['inview-class-bottom']);
+		//store the element inside this class
+		this.$el = $el;
 
-		var ACTIVE_OFFSET = Gumby.selectAttr.apply($elem, ['inview-offset']);
-		var ACTIVE_OFFSET_TOP = Gumby.selectAttr.apply($elem, ['inview-offset-top']);
-		var ACTIVE_OFFSET_BOTTOM = Gumby.selectAttr.apply($elem, ['inview-offset-bottom']);
+		var scope = this;
 
-		return {
-			elem: $elem,
-			classname: ACTIVE_TRIGGER,
-			classnameTop: ACTIVE_TRIGGER_TOP || "",
-			classnameBottom: ACTIVE_TRIGGER_BOTTOM || "",
-			offsetTop: ACTIVE_OFFSET_TOP || ACTIVE_OFFSET || 0,
-			offsetBottom: ACTIVE_OFFSET_BOTTOM || ACTIVE_OFFSET || 0
-		}
+		this.setup();
+
+		// re-initialize module
+		this.$el.on('gumby.initialize', function() {
+			Gumby.debug('Re-initializing InViewWatcher', scope.$el);
+			scope.setup();
+		});
+
 	}
+	
+	InViewWatcher.prototype.setup = function(){
+
+		Gumby.debug('Setting up instance of InViewWatcher', this.$el);
+
+		this.targets = this.parseTargets();
+
+		var classname = Gumby.selectAttr.apply(this.$el, ['class']).split("|");
+
+		this.classname =  classname[0];
+		this.classnameBottom = classname[1] || "";
+		this.classnameTop = classname[2] || classname[1] || "";
+
+		this.offset = Gumby.selectAttr.apply(this.$el, ['offset']) || 0;
+		this.offsetTop = Gumby.selectAttr.apply(this.$el, ['offset-top']) || this.offset;
+		this.offsetBottom = Gumby.selectAttr.apply(this.$el, ['offset-bottom']) || this.offset;
+	}
+
+	// parse data-for attribute
+	InViewWatcher.prototype.parseTargets = function() {
+		var targetStr = Gumby.selectAttr.apply(this.$el, ['trigger']);
+
+		// no targets so return false
+		if(!targetStr) {
+			return false;
+		}
+
+		//are there secondary targets?
+		var secondaryTargets = targetStr.split('|');
+
+		// no secondary targets specified so return single target
+		if(secondaryTargets.length === 1) {
+			return $(secondaryTargets[0]);
+		}
+
+		// return all targets
+		return $(secondaryTargets.join(", "));
+	};
+
+	
+	/*
+		Utility Method for managing Scrolling
+	*/
+	//Variables for Initialization
+	var t, k, tmp, tar, ot, oh, offt, offb, wh = $(window).height(), watchers = [];
+	//on scroll - loop through elements
+	// if the element is on the screen, give it the class
+	// if its off, take it's class away
+	
+	$(document).on('scroll', function(e){
+
+		t = $(this).scrollTop();
+		for(k = 0; k < watchers.length; k++){
+			tmp = watchers[k];
+			tar = tmp.targets || tmp.$el;
+
+			//keep 'hidden' elements from breaking the plugin
+			if(tmp.$el.css('display') == 'none'){
+				break;
+			}
+
+			//element's offset top and height
+			ot = tmp.$el.offset().top;
+			oh = tmp.$el.height();
+
+			//how much on the screen before we apply the class
+			offt = tmp.offsetTop;
+			offb = tmp.offsetBottom;
+
+			//if above bottom and below top, you're on the screen
+
+			var below = ot > (t - offb) + wh;
+
+			var above = ot + oh - offt < t;
+
+			
+			if(!above && !below){
+				if(!tar.hasClass(tmp.classname)){
+					tar.addClass(tmp.classname);
+				}
+				if(tar.hasClass(tmp.classnameTop)){
+					tar.removeClass(tmp.classnameTop);
+				}
+				if(tar.hasClass(tmp.classnameBottom)){
+					tar.removeClass(tmp.classnameBottom);
+				}
+			}else if(above && !below){
+				if(tar.hasClass(tmp.classname)){
+					tar.removeClass(tmp.classname);
+				}
+				if(tar.hasClass(tmp.classnameBottom)){
+					tar.removeClass(tmp.classnameBottom);
+				}
+				if(!tar.hasClass(tmp.classnameTop)){
+					tar.addClass(tmp.classnameTop);
+				}
+			}else if(below && !above){
+				if(tar.hasClass(tmp.classname)){
+					tar.removeClass(tmp.classname);
+				}
+				if(tar.hasClass(tmp.classnameTop)){
+					tar.removeClass(tmp.classnameTop);
+				}
+				if(!tar.hasClass(tmp.classnameBottom)){
+					tar.addClass(tmp.classnameBottom);
+				}
+			}
+		}
+	});
+
+	//on resize - update window height reference
+	//and trigger scroll
+	$(window).on('resize', function(){
+		wh = $(this).height();
+		$(document).trigger('scroll');
+	});
+
+
 
 
 	// add toggle Initialization
 	Gumby.addInitalisation('inview', function(all) {
-		//Variables for Initialization
-		var t, k, tmp, ot, oh, offt, offb, wh = $(window).height(), watchers = [];
-
-		/*
-			I want to initialize elements which have a gumby-scroll-trigger attribute
-		*/
+		
+		
 		$('.inview').each(function() {
 			var $this = $(this);
 
@@ -50,82 +162,7 @@
 			// mark element as initialized
 			$this.data('isInView', true);
 			watchers.push(new InViewWatcher($this));
-
 		});
-
-
-		//on scroll - loop through elements
-		// if the element is on the screen, give it the class
-		// if its off, take it's class away
-		
-		$(document).on('scroll', function(e){
-
-			t = $(this).scrollTop();
-			for(k = 0; k < watchers.length; k++){
-				tmp = watchers[k];
-
-				//keep 'hidden' elements from breaking the plugin
-				if(tmp.elem.css('display') == 'none'){
-					break;
-				}
-
-				//element's offset top and height
-				ot = tmp.elem.offset().top;
-				oh = tmp.elem.height();
-
-				//how much on the screen before we apply the class
-				offt = tmp.offsetTop;
-				offb = tmp.offsetBottom;
-
-				//if above bottom and below top, you're on the screen
-
-				var below = ot > (t - offb) + wh;
-
-				var above = ot + oh - offt < t;
-
-
-				if(!above && !below){
-					if(!tmp.elem.hasClass(tmp.classname)){
-						tmp.elem.addClass(tmp.classname);
-					}
-					if(tmp.elem.hasClass(tmp.classnameTop)){
-						tmp.elem.removeClass(tmp.classnameTop);
-					}
-					if(tmp.elem.hasClass(tmp.classnameBottom)){
-						tmp.elem.removeClass(tmp.classnameBottom);
-					}
-				}else if(above && !below){
-					if(tmp.elem.hasClass(tmp.classname)){
-						tmp.elem.removeClass(tmp.classname);
-					}
-					if(!tmp.elem.hasClass(tmp.classnameTop)){
-						tmp.elem.addClass(tmp.classnameTop);
-					}
-					if(tmp.elem.hasClass(tmp.classnameBottom)){
-						tmp.elem.removeClass(tmp.classnameBottom);
-					}
-				}else if(below && !above){
-					if(tmp.elem.hasClass(tmp.classname)){
-						tmp.elem.removeClass(tmp.classname);
-					}
-					if(tmp.elem.hasClass(tmp.classnameTop)){
-						tmp.elem.removeClass(tmp.classnameTop);
-					}
-					if(!tmp.elem.hasClass(tmp.classnameBottom)){
-						tmp.elem.addClass(tmp.classnameBottom);
-					}
-				}
-			}
-		});
-
-		//on resize - update window height reference
-		//and trigger scroll
-		$(window).on('resize', function(){
-			wh = $(this).height();
-			$(document).trigger('scroll');
-		});
-
-
 	});
 
 
