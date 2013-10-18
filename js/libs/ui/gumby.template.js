@@ -56,11 +56,8 @@ $.fn.GumbyAttr = function(attributes){
 !function($) {
 	'use strict';
 
-	var group = [];
-
 	function Neat($el){
-		group.push(this);
-
+		
 		$el.css({
 			"color" : $el.GumbyAttr("color")
 		}).click(function(e){
