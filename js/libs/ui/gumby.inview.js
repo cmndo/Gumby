@@ -34,7 +34,14 @@
 		this.classnameBottom = classname[1] || "";
 		this.classnameTop = classname[2] || classname[1] || "";
 
-		var offset = Gumby.selectAttr.apply(this.$el, ['offset']).split("|");
+		var offset = Gumby.selectAttr.apply(this.$el, ['offset']);
+		if(offset != false){
+			offset = offset.split("|");
+		}else{
+			offset = 0;
+		}
+
+		console.log(offset);
 
 		this.offset =  offset[0] || 0;
 		this.offsetTop = offset[1] || offset[0];

@@ -41,13 +41,6 @@ function GumbyExtension(ExtensionClass, Selector){
 		}
 	});
 }
-$.fn.GumbyAttr = function(attributes){
-	return Gumby.selectAttr.apply($(this), [attributes]);
-}
-
-
-
-
 
 
 /*
@@ -59,13 +52,9 @@ $.fn.GumbyAttr = function(attributes){
 	function Neat($el){
 		
 		$el.css({
-			"color" : $el.GumbyAttr("color")
-		}).click(function(e){
-			e.preventDefault();
-			console.log(group);
-		});
-
-		$el.on('gumby.initialize', function(e){
+			"color" : Gumby.selectAttr.apply($el, ["color"]);
+		})
+		.on('gumby.initialize', function(e){
 			console.log("My element has been reinitialized");
 		});
 
